@@ -1,0 +1,24 @@
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+python-multipart==0.0.12
+python-dotenv==1.0.1
+pydantic==2.10.3
+pydantic-settings==2.6.1
+
+# Preprocessing
+opencv-python-headless==4.10.0.84
+pdf2image==1.17.0
+Pillow==11.0.0
+
+# OCR
+google-cloud-documentai==2.31.0
+
+# Search
+algoliasearch==4.9.1
+
+# LLM
+replicate==1.0.4
+
+# Database
+motor==3.7.0
+pymongo==4.10.1
