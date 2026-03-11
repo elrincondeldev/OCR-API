@@ -6,36 +6,6 @@ Upload a photo or scan of a delivery note → get back a fully parsed invoice wi
 
 ---
 
-## How it works
-
-```
-┌─────────────┐     file      ┌─────────────────────┐
-│   Frontend  │ ────────────► │  node-orchestrator  │
-│ (port 5173) │ ◄──────────── │     (port 3000)     │
-└─────────────┘   JSON resp   └─────────────────────┘
-                                        │
-               ┌────────────────────────┼────────────────────────┐
-               │                        │                        │
-               ▼                        ▼                        ▼
-   ┌───────────────────┐   ┌─────────────────────┐   ┌──────────────────┐
-   │  image-processor  │   │  Google Document AI │   │  Replicate LLM   │
-   │    (port 8001)    │   │       (OCR)         │   │  (invoice parse) │
-   │  Python FastAPI   │   └─────────────────────┘   └──────────────────┘
-   └───────────────────┘               │                        │
-                                       ▼                        │
-                            ┌─────────────────────┐            │
-                            │       Algolia       │            │
-                            │  (inventory hints)  │            │
-                            └─────────────────────┘            │
-                                       │                        │
-                                       └───────────┬────────────┘
-                                                   ▼
-                                       ┌─────────────────────┐
-                                       │    MongoDB Atlas     │
-                                       │  (persistent store) │
-                                       └─────────────────────┘
-```
-
 ### Pipeline steps
 
 | #   | Step                 | Service             | What it does                                                                                                                                                                |
