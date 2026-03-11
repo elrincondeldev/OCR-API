@@ -91,10 +91,6 @@ function attachReviewContext(
 // Routes
 // ---------------------------------------------------------------------------
 
-app.get("/health", (_req, res) => {
-  res.json({ status: "ok" });
-});
-
 // List delivery notes
 app.get("/api/v1/delivery-notes", async (req: Request, res: Response) => {
   const filter = (req.query.filter as string) ?? "all";
