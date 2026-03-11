@@ -1,0 +1,54 @@
+services:
+  image-processor:
+    build:
+      context: ./image-processor
+    container_name: image-processor
+    restart: unless-stopped
+    ports:
+      - "8001:8000"
+    networks:
+      - ocr-net
+
+  node-orchestrator:
+    build:
+      context: ./node-orchestrator
+    container_name: node-orchestrator
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - image-processor
+    environment:
+      IMAGE_PROCESSOR_URL: http://image-processor:8000
+
+      # Google Document AI
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/gcp-key.json
+      GOOGLE_CLOUD_PROJECT: ${GOOGLE_CLOUD_PROJECT}
+      DOCUMENT_AI_PROCESSOR_ID: ${DOCUMENT_AI_PROCESSOR_ID}
+      DOCUMENT_AI_LOCATION: ${DOCUMENT_AI_LOCATION}
+
+      # Replicate
+      REPLICATE_API_TOKEN: ${REPLICATE_API_TOKEN}
+      REPLICATE_MODEL: ${REPLICATE_MODEL}
+
+      # Algolia
+      ALGOLIA_APP_ID: ${ALGOLIA_APP_ID}
+      ALGOLIA_API_KEY: ${ALGOLIA_API_KEY}
+      ALGOLIA_INDEX_NAME: ${ALGOLIA_INDEX_NAME}
+
+      # MongoDB
+      MONGODB_URI: ${MONGODB_URI}
+      MONGODB_DB_NAME: ${MONGODB_DB_NAME}
+      MONGODB_COLLECTION: ${MONGODB_COLLECTION}
+
+      # Pipeline
+      CONFIDENCE_THRESHOLD: ${CONFIDENCE_THRESHOLD:-0.80}
+      PORT: 3000
+    volumes:
+      - ${GCP_KEY_PATH}:/secrets/gcp-key.json:ro
+    networks:
+      - ocr-net
+
+networks:
+  ocr-net:
+    driver: bridge
